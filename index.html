@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSC Academic Dashboard - Premium+</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap');
+
+        :root {
+            /* Refined Color Palette */
+            --background-body: #f8fafc; /* Slightly off-white */
+            --background-card: #ffffff;
+            --background-alt: #f1f5f9; /* Subtle contrast for nested elements */
+            --background-hover: #f7f8fa; /* Gentle hover */
+            --text-primary: #0f172a;   /* Darker Slate for strong text */
+            --text-secondary: #334155; /* Medium Slate for standard text */
+            --text-muted: #64748b;    /* Lighter Slate for hints/placeholders */
+            --border-color: #e2e8f0;   /* Soft border */
+            --border-color-strong: #cbd5e1; /* Slightly stronger border */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --border-radius-sm: 6px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --transition-fast: 0.2s ease-out;
+            --transition-normal: 0.3s ease-out;
+            --font-bengali: 'Hind Siliguri', sans-serif;
+            --font-english: 'Poppins', sans-serif;
+
+            /* Subject Colors (Vibrant & Consistent) */
+            --physics-base: #3b82f6; --physics-dark: #2563eb; --physics-light: #dbeafe;
+            --chemistry-base: #22c55e; --chemistry-dark: #16a34a; --chemistry-light: #dcfce7;
+            --math-base: #f59e0b; --math-dark: #d97706; --math-light: #fef3c7;
+            --biology-base: #a855f7; --biology-dark: #9333ea; --biology-light: #f3e8ff;
+            --bangla-base: #ef4444; --bangla-dark: #dc2626; --bangla-light: #fee2e2;
+            --english-base: #6366f1; --english-dark: #4f46e5; --english-light: #e0e7ff;
+            --ict-base: #14b8a6; --ict-dark: #0d9488; --ict-light: #ccfbf1;
+
+            /* Active Subject Colors (Fallback: Slate) */
+            --active-base: #475569; /* Slate-600 */
+            --active-dark: #1e293b; /* Slate-800 */
+            --active-light: #f1f5f9; /* Slate-100 */
+            --active-text: #ffffff; /* Text color on active elements */
+            --focus-ring-color: rgba(100, 116, 139, 0.3); /* Default focus ring */
+
+            /* Standard Icon Size */
+            --icon-size-sm: 16px;
+            --icon-size-md: 20px;
+            --icon-size-lg: 24px;
+        }
+
+        /* General Reset & Body */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-bengali); color: var(--text-secondary);
+            line-height: 1.7; background-color: var(--background-body);
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+        }
+        .container { max-width: 1700px; margin: 0 auto; padding: 0 20px; } /* Slightly narrower, less padding */
+        .hidden { display: none !important; }
+        .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+        h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 600; line-height: 1.3; }
+        a { color: var(--active-base); text-decoration: none; transition: color var(--transition-fast); }
+        a:hover { color: var(--active-dark); }
+        svg { vertical-align: middle; /* Better alignment */ }
+
+        /* --- Enhanced Header --- */
+        .premium-header {
+            background-color: var(--background-card);
+            box-shadow: var(--shadow-sm); padding: 15px 0; /* Increased padding */
+            position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .premium-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .premium-header-title { font-size: 1.6rem; background: linear-gradient(60deg, var(--active-dark), var(--active-base)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* --- Refined Tabs --- */
+        .premium-tabs-container { padding: 20px 0; }
+        .premium-tabs {
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; /* For scrollbar space */
+             -ms-overflow-style: none; scrollbar-width: none; /* Hide scrollbar standard */
+        }
+        .premium-tabs::-webkit-scrollbar { height: 4px; }
+        .premium-tabs::-webkit-scrollbar-thumb { background-color: var(--border-color-strong); border-radius: 10px; }
+
+        .premium-tab {
+            padding: 10px 22px; border: 1px solid var(--border-color);
+            background-color: var(--background-card); color: var(--text-secondary);
+            font-size: 1rem; font-weight: 500; cursor: pointer;
+            border-radius: var(--border-radius-md); transition: all var(--transition-normal);
+            display: inline-flex; /* Changed */ align-items: center; gap: 8px;
+            white-space: nowrap; box-shadow: var(--shadow-xs);
+        }
+        .premium-tab svg {
+            width: var(--icon-size-md); height: var(--icon-size-md); /* Standard size */
+            fill: currentColor; opacity: 0.8; transition: all var(--transition-fast);
+            flex-shrink: 0; /* Prevent icon shrinking */
+        }
+        .premium-tab:hover:not(.active) {
+            background-color: var(--background-hover); color: var(--text-primary);
+            border-color: var(--border-color-strong); box-shadow: var(--shadow-sm);
+            transform: translateY(-2px);
+        }
+        .premium-tab:focus-visible { /* Enhanced Focus */
+            outline: 2px solid var(--focus-ring-color); outline-offset: 2px;
+        }
+        .premium-tab.active {
+            font-weight: 600; color: var(--active-text); /* Dynamic text color */
+            background: linear-gradient(to right, var(--active-base), var(--active-dark));
+            box-shadow: var(--shadow-md); border-color: transparent;
+            transform: translateY(-2px);
+        }
+        .premium-tab.active svg { opacity: 1; filter: brightness(1.5); /* Make icon pop */ }
+
+        /* --- Main Content Area --- */
+        .premium-content-area { padding-bottom: 60px; }
+        .premium-content-wrapper { animation: premiumFadeInUp 0.5s cubic-bezier(0.215, 0.610, 0.355, 1); }
+        @keyframes premiumFadeInUp { from { opacity: 0; transform: translateY(25px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Paper Grid & Card */
+        .papers-grid-premium {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr)); /* Adjusted minmax */
+            gap: 30px;
+        }
+        .paper-card-premium {
+            background-color: var(--background-card); border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md); transition: all var(--transition-normal);
+            overflow: hidden; border: 1px solid var(--border-color); /* Subtle border */
+            border-top: 4px solid var(--active-base); /* Thicker top border */
+        }
+        .paper-card-premium:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); border-color: var(--border-color-strong);}
+        .paper-card-header {
+             padding: 20px 25px; display: flex; justify-content: space-between; align-items: center;
+             border-bottom: 1px solid var(--border-color); background-color: transparent; /* Removed alt background */
+        }
+        .paper-title-premium {
+            font-size: 1.35rem; display: flex; align-items: center; gap: 12px; /* Increased gap */
+            color: var(--active-dark);
+        }
+        .paper-title-premium svg {
+            width: var(--icon-size-lg); height: var(--icon-size-lg); /* Correct size */
+            fill: currentColor; flex-shrink: 0;
+        }
+        .paper-card-body { padding: 25px; }
+
+        /* --- Chapter Accordion (Refined) --- */
+        .chapter-list-premium { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px; }
+        .chapter-item-premium {
+             background-color: var(--background-card); border: 1px solid var(--border-color);
+             border-radius: var(--border-radius-md); overflow: hidden;
+             box-shadow: var(--shadow-xs); transition: box-shadow var(--transition-normal);
+         }
+        .chapter-item-premium:hover { box-shadow: var(--shadow-sm); }
+        .chapter-summary-premium {
+             padding: 15px 20px; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+             background-color: transparent; position: relative; transition: background-color var(--transition-fast);
+             /* Make summary focusable */
+             outline: none;
+         }
+         .chapter-summary-premium:hover { background-color: var(--background-hover); }
+         .chapter-summary-premium:focus-visible { /* Focus style for accordion header */
+            box-shadow: inset 0 0 0 2px var(--focus-ring-color);
+         }
+
+        .chapter-name-premium { font-weight: 600; font-size: 1.15rem; color: var(--text-primary); flex-grow: 1; margin-right: 15px; }
+        .chapter-actions-premium { display: flex; align-items: center; gap: 5px; flex-shrink: 0; opacity: 0; transition: opacity var(--transition-fast); pointer-events: none; } /* Hide initially */
+        .chapter-item-premium:hover .chapter-actions-premium,
+        .chapter-summary-premium:focus-within .chapter-actions-premium, /* Show on focus */
+        details[open] > .chapter-summary-premium .chapter-actions-premium {
+            opacity: 1; pointer-events: auto; /* Show on hover/focus/open */
+        }
+        .accordion-toggle-icon {
+            color: var(--text-muted); /* Subtler color */
+            transition: transform var(--transition-normal); /* Smoother transition */
+            width: var(--icon-size-md); height: var(--icon-size-md);
+            flex-shrink: 0; margin-left: 10px; /* Ensure space */
+            display: flex; align-items: center; justify-content: center; /* Center icon */
+        }
+        .accordion-toggle-icon svg { width: 100%; height: 100%; }
+        details[open] > .chapter-summary-premium .accordion-toggle-icon { transform: rotate(180deg); color: var(--active-base); }
+        details summary::-webkit-details-marker { display: none; } /* Hide default marker */
+        details summary { list-style: none; }
+
+        /* Chapter Details Content */
+        .chapter-details-premium {
+             padding: 0 20px 0 45px; /* Indent, no top/bottom padding initially */
+             background-color: var(--background-alt); border-top: 1px solid var(--border-color);
+             max-height: 0; overflow: hidden;
+             /* Smoother transition */
+             transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), padding-top 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), padding-bottom 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+         }
+        details[open] > .chapter-details-premium {
+             max-height: 2500px; /* Sufficient height */
+             padding-top: 20px; padding-bottom: 25px; /* Add padding on open */
+        }
+        .lecture-list-premium { list-style: none; padding: 0; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .lecture-item-premium {
+             display: flex; align-items: center; justify-content: space-between;
+             padding: 12px 18px; background-color: var(--background-card);
+             border-radius: var(--border-radius-md); border: 1px solid var(--border-color);
+             position: relative; box-shadow: var(--shadow-xs);
+             transition: all var(--transition-fast);
+         }
+        .lecture-item-premium:hover { background-color: var(--background-hover); border-color: var(--border-color-strong); box-shadow: var(--shadow-sm); transform: translateX(3px); }
+        .lecture-info-premium { display: flex; align-items: center; gap: 12px; flex-grow: 1; min-width: 0; /* Prevent overflow */ }
+        .lecture-info-premium svg {
+            width: var(--icon-size-md); height: var(--icon-size-md); /* Standard size */
+            color: var(--active-base); /* Use color instead of fill for icons */
+            opacity: 0.9; flex-shrink: 0;
+        }
+        .lecture-title-premium {
+            font-size: 1.05rem; color: var(--text-primary); font-weight: 500;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* Handle long titles */
+        }
+        .lecture-actions-premium { display: flex; gap: 8px; flex-shrink: 0; margin-left: 15px; /* Ensure space */ }
+        /* No need for opacity toggling here, keep them visible for clarity */
+
+        /* --- Buttons (Refined) --- */
+        .btn-premium {
+            padding: 9px 20px; border: none; border-radius: var(--border-radius-md);
+            font-family: var(--font-bengali); font-size: 0.95rem; font-weight: 600; /* Slightly bolder */
+            cursor: pointer; transition: all var(--transition-normal);
+            text-decoration: none; display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; white-space: nowrap; line-height: 1.4;
+            border: 1px solid transparent; box-shadow: var(--shadow-sm);
+            outline: none; /* Remove default outline */
+        }
+        .btn-premium svg {
+            width: var(--icon-size-sm); height: var(--icon-size-sm); /* Standard size */
+            fill: currentColor; /* Use fill for solid icons */
+        }
+        .btn-premium:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); filter: brightness(1.05); }
+        .btn-premium:active { transform: translateY(0); box-shadow: var(--shadow-xs); filter: brightness(0.95); }
+        .btn-premium:focus-visible { /* Enhanced Focus */
+             box-shadow: 0 0 0 3px var(--focus-ring-color);
+        }
+        .btn-sm { padding: 7px 14px; font-size: 0.88rem; gap: 6px; }
+        .btn-sm svg { width: 14px; height: 14px; }
+
+        /* Button Variants (Improved Contrast & Style) */
+        .btn-primary-premium { background: linear-gradient(to right, var(--active-base), var(--active-dark)); color: var(--active-text); }
+        .btn-primary-premium:hover { background: linear-gradient(to right, var(--active-dark), var(--active-dark)); } /* Darker hover */
+        .btn-secondary-premium { background-color: var(--background-card); color: var(--active-base); border: 1px solid var(--active-base); box-shadow: none; }
+        .btn-secondary-premium:hover { background-color: var(--active-light); color: var(--active-dark); border-color: var(--active-dark); }
+        .btn-danger-premium { background: linear-gradient(to right, var(--bangla-base), var(--bangla-dark)); color: white; }
+        .btn-danger-premium:hover { background: linear-gradient(to right, var(--bangla-dark), var(--bangla-dark)); }
+        .btn-warning-premium { background: linear-gradient(to right, var(--math-base), var(--math-dark)); color: var(--text-primary); } /* Darker text for yellow */
+        .btn-warning-premium:hover { background: linear-gradient(to right, var(--math-dark), var(--math-dark)); }
+        .btn-subtle-premium { background-color: var(--background-alt); color: var(--text-secondary); border-color: var(--border-color); box-shadow: none; }
+        .btn-subtle-premium:hover { background-color: var(--border-color); color: var(--text-primary); }
+
+        /* Icon Button Refined */
+        .btn-icon-premium {
+            padding: 8px; background: none; border: none; box-shadow: none;
+            color: var(--text-muted); border-radius: 50%; line-height: 1; /* Ensure icon centered */
+            display: inline-flex; align-items: center; justify-content: center;
+            transition: background-color var(--transition-fast), color var(--transition-fast);
+        }
+        .btn-icon-premium svg { width: var(--icon-size-md); height: var(--icon-size-md); fill: none; stroke: currentColor; stroke-width: 1.5; /* Use stroke icons */ }
+        .btn-icon-premium:hover { background-color: var(--background-alt); color: var(--active-dark); }
+        .btn-icon-premium.danger:hover { background-color: var(--bangla-light); color: var(--bangla-dark); }
+        .btn-icon-premium.warning:hover { background-color: var(--math-light); color: var(--math-dark); }
+        .btn-icon-premium:focus-visible {
+            background-color: var(--background-alt);
+            box-shadow: 0 0 0 3px var(--focus-ring-color);
+        }
+
+
+        /* --- Forms (Modernized Modal) --- */
+        .premium-modal {
+            display: none; position: fixed; inset: 0; z-index: 1050;
+            background-color: rgba(15, 23, 42, 0.7); /* Darker backdrop */
+            backdrop-filter: blur(5px);
+            animation: premiumFadeIn 0.3s ease-out;
+            padding: 20px; overflow-y: auto; /* Allow scrolling backdrop */
+            display: flex; /* Center vertically */
+            align-items: center;
+            justify-content: center;
+        }
+         @keyframes premiumFadeIn { from{opacity:0;} to{opacity:1;} }
+        .premium-modal-content {
+            background-color: var(--background-card); border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg); max-width: 600px; /* Adjusted max-width */
+            width: 100%; /* Responsive width */
+            margin: auto; /* Centering */
+            overflow: hidden; border-top: 4px solid var(--active-base);
+            animation: premiumSlideDownFade 0.4s cubic-bezier(0.215, 0.610, 0.355, 1);
+            display: flex; /* Use flex for structure */
+            flex-direction: column;
+            max-height: calc(100vh - 40px); /* Limit height */
+        }
+        @keyframes premiumSlideDownFade { from{opacity:0; transform: translateY(-20px) scale(0.98);} to{opacity:1; transform: translateY(0) scale(1);} }
+        .premium-modal-header {
+            padding: 18px 25px; border-bottom: 1px solid var(--border-color); display: flex;
+            justify-content: space-between; align-items: center; flex-shrink: 0; /* Prevent shrinking */
+        }
+        .premium-modal-title { font-size: 1.3rem; font-weight: 600; color: var(--text-primary); }
+        .premium-modal-close-button {
+             background: none; border: none; font-size: 2rem; line-height: 1;
+             color: var(--text-muted); cursor: pointer; padding: 0 5px;
+             transition: color var(--transition-fast), transform var(--transition-fast);
+        }
+        .premium-modal-close-button:hover { color: var(--text-primary); transform: rotate(90deg) scale(1.1); }
+        .premium-modal-body {
+            padding: 25px 30px;
+            overflow-y: auto; /* Scroll only body */
+            flex-grow: 1; /* Allow body to take space */
+        }
+        .premium-modal-actions {
+            padding: 15px 30px; background-color: var(--background-alt);
+            border-top: 1px solid var(--border-color); text-align: right;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .premium-modal-actions .btn-premium { margin-left: 10px; }
+
+        /* Form Fields Refined */
+        .form-field-premium { margin-bottom: 20px; }
+        .form-field-premium label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.95rem; color: var(--text-primary); }
+        .form-field-premium input, .form-field-premium select {
+            width: 100%; padding: 12px 15px; border: 1px solid var(--border-color-strong);
+            border-radius: var(--border-radius-md); font-size: 1rem; font-family: var(--font-bengali);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            background-color: var(--background-card); color: var(--text-secondary);
+            appearance: none; /* Remove default styling */
+        }
+         .form-field-premium select {
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2364748b'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
+             background-repeat: no-repeat; background-position: right 15px center; background-size: 1.1em 1.1em;
+             padding-right: 40px; /* Space for arrow */
+         }
+        .form-field-premium input::placeholder { color: var(--text-muted); opacity: 0.7; }
+        .form-field-premium input:focus, .form-field-premium select:focus {
+             outline: none; border-color: var(--active-base);
+             box-shadow: 0 0 0 3px var(--focus-ring-color);
+        }
+        .form-field-premium input.input-error, .form-field-premium select.input-error {
+            border-color: var(--bangla-dark) !important; background-color: var(--bangla-light);
+        }
+        .form-error-premium { color: var(--bangla-dark); font-size: 0.9rem; margin-top: 6px; min-height: 1.2em; font-weight: 500;}
+
+
+        /* --- Video Modal Refined --- */
+        #video-modal-premium .premium-modal-content { max-width: 1100px; /* Wider for video */ border-top-color: var(--active-base); aspect-ratio: 16 / 9; max-height: 85vh;}
+        #video-modal-body-premium { padding: 0; background-color: #000; flex-grow: 1; display: flex; /* Use flex to contain player */ }
+        #youtube-player-container-premium { width: 100%; height: 100%; } /* Player fills container */
+        #youtube-player-container-premium iframe { display: block; width: 100%; height: 100%; border: none; } /* Make iframe responsive */
+        .player-message-premium { display:flex; justify-content:center; align-items:center; width:100%; height:100%; color:#ccc; font-size:1.2rem; text-align:center; padding:30px; background-color:#111; }
+        .player-message-premium.error { color: #ffcc80; }
+
+
+        /* --- Status Area (Toast Notifications) --- */
+        #status-area-premium { position: fixed; bottom: 25px; right: 25px; z-index: 2000; width: auto; max-width: 400px; pointer-events: none; }
+        .status-message-premium {
+            text-align: left; /* Left align for better reading */
+            padding: 15px 25px; margin-bottom: 15px; border-radius: var(--border-radius-md);
+            font-weight: 500; font-size: 1rem;
+            animation: premiumStatusSlideIn 0.4s ease-out forwards, premiumStatusFadeOut 0.4s ease-in 3.1s forwards; /* Slide in, wait, fade out */
+            box-shadow: var(--shadow-lg); border: 1px solid transparent; color: #fff;
+            background-color: rgba(15, 23, 42, 0.9); /* Dark base */
+            pointer-events: auto;
+            display: flex; align-items: center; gap: 12px;
+         }
+         .status-message-premium::before { /* Icon indicator */
+             content: ''; display: inline-block; width: var(--icon-size-md); height: var(--icon-size-md);
+             border-radius: 50%; background-color: currentColor; flex-shrink: 0;
+             /* Basic icon shape - replace with SVG later if needed */
+         }
+        @keyframes premiumStatusSlideIn { from{opacity:0; transform: translateX(100%);} to{opacity:1; transform: translateX(0);} }
+        @keyframes premiumStatusFadeOut { from{opacity:1; transform: translateX(0);} to{opacity:0; transform: translateX(10%);} } /* Slight move on fade */
+        .status-success { background: linear-gradient(to right, #15803d, #16a34a); } /* Darker Green */
+        .status-success::before { background-color: #bbf7d0; /* Light Green dot */ }
+        .status-error { background: linear-gradient(to right, #b91c1c, #dc2626); } /* Darker Red */
+        .status-error::before { background-color: #fecaca; /* Light Red dot */ }
+        .status-info { background: linear-gradient(to right, #1d4ed8, #2563eb); } /* Darker Blue */
+        .status-info::before { background-color: #bfdbfe; /* Light Blue dot */ }
+
+
+        /* --- Loading Placeholder --- */
+        .loading-placeholder-premium { display: flex; flex-direction: column; /* Stack spinner and text */ justify-content: center; align-items: center; padding: 80px 20px; text-align: center; color: var(--text-muted); font-size: 1.1rem; gap: 15px; min-height: 200px; }
+        .spinner-premium {
+            width: 40px; height: 40px; border: 4px solid var(--border-color); /* Lighter track */
+            border-top-color: var(--active-base); border-radius: 50%;
+            animation: premiumSpin 0.8s linear infinite;
+        }
+        @keyframes premiumSpin { to { transform: rotate(360deg); } }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+             .papers-grid-premium { grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)); gap: 25px; }
+             .paper-card-premium { border-top-width: 3px; }
+        }
+        @media (max-width: 768px) {
+             .container { padding: 0 15px; }
+             .premium-header { padding: 12px 15px; }
+             .premium-header-title { font-size: 1.4rem; }
+             .premium-tabs-container { padding: 15px 0; } /* Edge-to-edge scroll */
+             .premium-tabs { padding-left: 15px; padding-right: 15px; }
+             .premium-tab { padding: 9px 18px; font-size: 0.95rem; gap: 6px; }
+             .paper-card-premium { border-radius: var(--border-radius-md); }
+             .paper-card-header { padding: 18px 20px; }
+             .paper-title-premium { font-size: 1.2rem; gap: 10px; }
+             .paper-card-body { padding: 20px; }
+             .chapter-list-premium { gap: 12px; }
+             .chapter-summary-premium { padding: 14px 18px; }
+             .chapter-name-premium { font-size: 1.05rem; }
+             /* Keep chapter actions hover/focus only for less clutter */
+             .chapter-details-premium { padding: 15px 20px 20px 35px; /* Reduced indent */ }
+             .lecture-item-premium { padding: 10px 15px; flex-wrap: wrap; gap: 10px; } /* Allow wrapping */
+             .lecture-info-premium { min-width: calc(100% - 100px); /* Allow space for buttons */ }
+             .lecture-actions-premium { margin-left: 0; width: 100%; justify-content: flex-end; } /* Buttons at end */
+             .btn-premium { font-size: 0.9rem; padding: 8px 16px; }
+             .premium-modal { padding: 15px; align-items: flex-start; /* Align top on mobile */ }
+             .premium-modal-content { margin-top: 5vh; margin-bottom: 5vh; max-height: 90vh; } /* Vertical margin */
+             .premium-modal-body { padding: 20px 25px; }
+             .premium-modal-actions { padding: 12px 25px; }
+             #status-area-premium { bottom: 15px; right: 15px; left: 15px; max-width: none; width: auto; }
+             .status-message-premium { margin-bottom: 10px; padding: 12px 20px; font-size: 0.95rem; }
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="premium-header">
+        <div class="container">
+            <h1 class="premium-header-title">HSC Academic Dashboard</h1>
+            <!-- Add profile/logout later if needed -->
+        </div>
+    </header>
+
+    <!-- Subject Navigation -->
+    <div class="premium-tabs-container">
+        <div class="container"> <!-- Container for padding -->
+            <div class="premium-tabs" id="subject-tabs-container">
+                 <!-- Tabs Injected Here -->
+                 <div class="loading-placeholder-premium" style="padding: 10px 0; min-height: auto; flex-direction: row;">
+                     <div class="spinner-premium" style="width: 24px; height: 24px; border-width: 3px;"></div>
+                     <span>ট্যাব লোড হচ্ছে...</span>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="container premium-content-area" id="subject-content-area-elite">
+        <!-- Subject content injected here -->
+        <div class="loading-placeholder-premium" id="content-loading">
+            <div class="spinner-premium"></div>
+            <span>কন্টেন্ট লোড হচ্ছে...</span>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Video Modal -->
+    <div id="video-modal-premium" class="premium-modal hidden" role="dialog" aria-modal="true" aria-labelledby="video-modal-title-premium">
+        <div class="premium-modal-content" id="video-modal-content">
+            <div class="premium-modal-header">
+                <h2 id="video-modal-title-premium" class="premium-modal-title">লেকচার লোড হচ্ছে...</h2>
+                <button class="premium-modal-close-button" data-modal-close="video-modal-premium" aria-label="বন্ধ করুন">&times;</button>
+            </div>
+            <div id="video-modal-body-premium" class="premium-modal-body">
+                <div id="youtube-player-container-premium">
+                    <div class="player-message-premium">প্লেয়ার লোড হচ্ছে...</div>
+                </div>
+            </div>
+            <!-- Footer removed for video modal -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Item Modal (Generic) -->
+    <div id="item-modal-premium" class="premium-modal hidden" role="dialog" aria-modal="true" aria-labelledby="item-modal-title-premium">
+         <div class="premium-modal-content"> <!-- Removed style override -->
+             <form id="item-form-premium" class="modal-form" novalidate> <!-- Added novalidate -->
+                 <div class="premium-modal-header">
+                     <h2 id="item-modal-title-premium" class="premium-modal-title">আইটেম যোগ/এডিট করুন</h2>
+                     <button type="button" class="premium-modal-close-button" data-modal-close="item-modal-premium" aria-label="বন্ধ করুন">&times;</button>
+                 </div>
+                 <div class="premium-modal-body">
+                      <input type="hidden" id="edit-item-type-premium">
+                      <input type="hidden" id="edit-subject-key-premium">
+                      <input type="hidden" id="edit-paper-key-premium">
+                      <input type="hidden" id="edit-chapter-index-premium">
+                      <input type="hidden" id="edit-lecture-index-premium">
+                     <div id="item-form-fields-premium"> <!-- Dynamic Fields --> </div>
+                     <div id="item-error-premium" class="form-error-premium" aria-live="polite"></div> <!-- aria-live -->
+                 </div>
+                 <div class="premium-modal-actions">
+                     <button type="button" class="btn-premium btn-subtle-premium" data-modal-close="item-modal-premium">বাতিল</button>
+                     <button type="submit" class="btn-premium btn-primary-premium">
+                         <svg aria-hidden="true"><use xlink:href="#icon-save"></use></svg>
+                         সেভ করুন
+                     </button>
+                 </div>
+             </form>
+         </div>
+     </div>
+
+    <!-- Status Area -->
+    <div id="status-area-premium"></div>
+
+    <!-- Inline SVG Icons (Refined & Added Stroke Icons) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <!-- Solid Fill Icons -->
+        <symbol id="icon-physics" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2ZM8.293 15.293a1 1 0 0 1 1.414 0L12 17.586l2.293-2.293a1 1 0 1 1 1.414 1.414l-3 3a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 0-1.414ZM13 10a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z" fill="currentColor"/></symbol>
+        <symbol id="icon-chemistry" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.78 6.38a.93.93 0 0 0-.31-.68L14.22 1.19a.93.93 0 0 0-.72-.25H10.5c-.28 0-.54.08-.72.25L4.22 6.38a.93.93 0 0 0-.31.68v5.88c0 3.96 3.1 7.12 7 7.12h2c3.98 0 7.09-3.16 7.09-7.12V7.06a.93.93 0 0 0-.31-.68ZM6.41 7.5 10.09 2.82h3.82L17.59 7.5v3.5H6.41V7.5Zm8.5 5h3.18V7.5l-3.68-4.74h-6.9l-3.68 4.74V11H11v1.94c0 2.84 2.23 5.12 5.09 5.12h.82c2.86 0 5.09-2.28 5.09-5.12V12.5h-3.18v1.59Z" fill="currentColor"/></symbol>
+        <symbol id="icon-math" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5Zm9 14h-2v-2h2v2Zm0-4h-2v-2h2v2Zm0-4h-2V7h2v2Zm-4 8H8v-2h2v2Zm0-4H8v-2h2v2Zm0-4H8V7h2v2Zm-4 8H5v-2h2v2Zm0-4H5v-2h2v2Z" fill="currentColor"/></symbol>
+        <symbol id="icon-biology" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2Zm0 18c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8ZM11 6a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2h-2Zm3.536 10.607a4.5 4.5 0 0 0 .614-5.02 4.5 4.5 0 0 0-1.46-1.94l-1.414 1.414a2.5 2.5 0 0 1 .81.967c.316.873.207 1.817-.31 2.546l1.76 1.016Zm-7.072 0-.004-.007 1.76-1.016a2.5 2.5 0 0 1-.31-2.546 2.5 2.5 0 0 1 .81-.967L8.278 9.647a4.5 4.5 0 0 0-1.46 1.94 4.5 4.5 0 0 0 .613 5.02l1.76-1.016-.001.013Z" fill="currentColor"/></symbol>
+        <symbol id="icon-bangla" viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" fill="currentColor"/></symbol>
+        <symbol id="icon-english" viewBox="0 0 24 24"><path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6h-5.6z" fill="currentColor"/></symbol>
+        <symbol id="icon-ict" viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z" fill="currentColor"/></symbol>
+        <symbol id="icon-book" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4Zm10 7.5a.5.5 0 0 0-.812-.39L11 12.432V4H6v8l2.5-1.5L11 12V5.568l2.188-1.459A.5.5 0 0 0 14 4.5v7Z" fill="currentColor"/></symbol>
+        <symbol id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7L8 5z" fill="currentColor"></path></symbol>
+        <symbol id="icon-video" viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z" fill="currentColor"></path></symbol>
+        <symbol id="icon-link" viewBox="0 0 24 24"><path d="M17 7h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.71-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.71 0-3.1-1.39-3.1-3.1 0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9zM8 13h8v-2H8v2z" fill="currentColor"></path></symbol>
+        <symbol id="icon-pdf" viewBox="0 0 24 24"><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 4.5H14v-6h1.5v6zm4-6h-1.5v6H18V9h1.5v4.5h1.5V9h1.5V7.5h-4.5v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6z" fill="currentColor"></path></symbol>
+        <symbol id="icon-save" viewBox="0 0 24 24"><path d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-4-4zm-5 16a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm3-10H5V5h10v4z" fill="currentColor"></path></symbol>
+        <symbol id="icon-down-arrow" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></symbol>
+
+        <!-- Stroke Icons (For Icon Buttons) -->
+        <symbol id="icon-add" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></symbol>
+        <symbol id="icon-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></symbol>
+        <symbol id="icon-delete" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></symbol>
+        <!-- Other icons like options, drag-handle etc. can be added similarly if needed -->
+    </svg>
+
+    <!-- YouTube IFrame Player API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <script>
+        // --- Configuration ---
+        const LOCAL_STORAGE_KEY_DATA = 'hscAcademicDashboardPremiumPlus_v2'; // Updated key for new structure/style
+        const STATUS_MESSAGE_DURATION = 3500; // 3.5 seconds
+
+        // --- Default Data Structure (Copied from provided HTML, ensure 'type' is present) ---
+        const defaultSubjectData = { /* ... Paste the full defaultSubjectData object from the original HTML ... */
+            "physics": { "title": "পদার্থবিজ্ঞান", "icon": "icon-physics", "primaryColor": "var(--physics-base)", "accentColor": "var(--physics-dark)", "papers": { "paper1": { "title": "পদার্থবিজ্ঞান ১ম পত্র", "icon": "icon-book", "chapters": [ { "name": "২. ভেক্টর", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/ift1RFd4BD8", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/bcjUUdWLmqI", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/kcJwtiUo63Y", type: 'youtube' } ] }, { "name": "৪. নিউটনিয়ান বলবিদ্যা", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/FbM7W593h3o", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/IAqfLdf-bdI", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/YSqsVZ9q3Mw", type: 'youtube' } ] }, { "name": "৫. কাজ, ক্ষমতা, শক্তি", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/_93WtDKGWWw", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/ZfBTRINWnx4", type: 'youtube' } ] }, { "name": "৬. মহাকর্ষ ও অভিকর্ষ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/loDHqbXt-7M", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/cXAWMfvHAd8", type: 'youtube' } ] }, { "name": "৭. পদার্থের গাঠনিক ধর্ম", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/vRCG1S-63Pg", type: 'youtube' } ] }, { "name": "৮. পর্যায়বৃত্ত গতি", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/80PDijg07oM", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/V2YlosN3MAM", type: 'youtube' } ] }, { "name": "১০. আদর্শ গ্যাস ও গ্যাসের গতিতত্ত্ব", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/jWdI36YEGE0", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/-2Y_UP-s1gY", type: 'youtube' } ] } ] }, "paper2": { "title": "পদার্থবিজ্ঞান ২য় পত্র", "icon": "icon-book", "chapters": [ { "name": "১. তাপগতিবিদ্যা", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/g4rWFo_mi_o", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/bjvX-htYx-4", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/xJh2Clw1DbY", type: 'youtube' } ] }, { "name": "২. স্থির তড়িৎ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/xJh2Clw1DbY", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/_pZbRk0zMgM", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/SpRhH5m0KHg", type: 'youtube' } ] }, { "name": "৩. চল তড়িৎ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/lof2eMuEx1U", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/MT2gKV5LuhU", type: 'youtube' } ] }, { "name": "৭. ভৌত আলোকবিজ্ঞান", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/ryC_RO-XTI4", type: 'youtube' } ] }, { "name": "৮. আধুনিক পদার্থবিজ্ঞানের সূচনা", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/CXlsOv0zLvk", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/JNiWZCVFbqU", type: 'youtube' } ] }, { "name": "৯. পরমাণুর মডেল ও নিউক্লিয়ার পদার্থবিজ্ঞান", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/t0H6L6kyUqI", type: 'youtube' } ] }, { "name": "১০. সেমিকন্ডাক্টর ও ইলেক্ট্রনিক্স", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/7z7BbDQR4GM", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/pE8zJxrN88I", type: 'youtube' } ] } ] } } },
+            "chemistry": { "title": "রসায়ন", "icon": "icon-chemistry", "primaryColor": "var(--chemistry-base)", "accentColor": "var(--chemistry-dark)", "papers": { "paper1": { "title": "রসায়ন ১ম পত্র", "icon": "icon-book", "chapters": [ { "name": "১. ল্যাবরেটরির নিরাপদ ব্যবহার", "lectures": [] }, { "name": "২. গুনগত রসায়ন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/H5ymYaK9ev4", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/38peTW3NE2U", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/keTSb6y0n2c", type: 'youtube' } ] }, { "name": "৩. মৌলের পর্যায়বৃত্ত ধর্ম ও রাসায়নিক বন্ধন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/R3FBu0kvTwc", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/5jFvrxgY3-0", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/sPlu-4KbD04", type: 'youtube' } ] }, { "name": "৪. রাসায়নিক পরিবর্তন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/3pF4zTFuMqA", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/cjb8WuvZjS8", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/Jz9B3OcuavI", type: 'youtube' } ] }, { "name": "৫. কর্মমুখী রসায়ন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/r1Y6StcViQw", type: 'youtube' } ] } ] }, "paper2": { "title": "রসায়ন ২য় পত্র", "icon": "icon-book", "chapters": [ { "name": "১. পরিবেশ রসায়ন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/EZ0dkvTWbVE", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/Lx14xhqkoEA", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/AjLzIk2LP9s", type: 'youtube' } ] }, { "name": "২. জৈব রসায়ন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/gTvbQB69Y6Q", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/grE0sUX5viA", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/NVZ5oR9kXaI", type: 'youtube' }, { "title": "লেকচার ০৪", "link": "https://youtu.be/pHzW_827YhM", type: 'youtube' }, { "title": "লেকচার ০৫", "link": "https://youtu.be/YuteNk2W8DY", type: 'youtube' }, { "title": "লেকচার ০৬", "link": "https://youtu.be/H4G6Bk29SrQ", type: 'youtube' }, { "title": "লেকচার ০৭", "link": "https://youtu.be/_vice8xQaBo", type: 'youtube' }, { "title": "লেকচার ০৮", "link": "https://youtu.be/uMsBkSeHhrI", type: 'youtube' } ] }, { "name": "৩. পরিমাণগত রসায়ন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/ICHufRsUPlw", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/4EYWwgGneME", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/yBGL7dwiEls", type: 'youtube' } ] }, { "name": "৪. তড়িৎ রসায়ন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/psByVfUrfLY", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/gQR-IXFERSo", type: 'youtube' } ] } ] } } },
+            "math": { "title": "উচ্চতর গণিত", "icon": "icon-math", "primaryColor": "var(--math-base)", "accentColor": "var(--math-dark)", "papers": { "paper1": { "title": "উচ্চতর গণিত ১ম পত্র", "icon": "icon-book", "chapters": [ { "name": "১. ম্যাট্রিক্স ও নির্ণায়ক", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/sOjvNhg6geg", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/u1FUpsAY2bA", type: 'youtube' } ] }, { "name": "৩. সরলরেখা", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/eaUYI1-jU2s", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/icElZDwYAd4", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/WGdIsOlgDhA", type: 'youtube' } ] }, { "name": "৪. বৃত্ত", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/8_Txgkb-kfs", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/_8JwPdFyZes", type: 'youtube' } ] }, { "name": "৭. সংযুক্ত কোণের ত্রিকোণমিতিক অনুপাত", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/YzJKnx5Zmrs", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/2RpemG20Jfw", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/23E-TTcj5R8", type: 'youtube' } ] }, { "name": "৯. অন্তরীকরণ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/Sqfzq15ZfEs", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/MecB6W3DcNg", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/tzdYCJSR7t8", type: 'youtube' }, { "title": "লেকচার ০৪", "link": "https://youtu.be/iyFApHlC3Ro", type: 'youtube' } ] }, { "name": "১০. যোগজীকরণ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/HOlvIB6ncuM", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/dU2QEFxILgU", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/F7xKQIdMIjE", type: 'youtube' } ] } ] }, "paper2": { "title": "উচ্চতর গণিত ২য় পত্র", "icon": "icon-book", "chapters": [ { "name": "৩. জটিল সংখ্যা", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/CnW54Rwkrw4", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/1oyyREJ-WLY", type: 'youtube' } ] }, { "name": "৪. বহুপদী ও বহুপদী সমীকরণ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/swBMf8-4slo", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/CVlLl3rfkGs", type: 'youtube' } ] }, { "name": "৬. কণিক", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/1Q93uL4zNMs", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/Dldv86puwOc", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/4-7tNdu92Jg", type: 'youtube' } ] }, { "name": "৭. বিপরীত ত্রিকোণমিতিক ফাংশন ও ত্রিকোণমিতিক সমীকরণ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/NeTnkOYjkTg", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/BV-VIvho1j8", type: 'youtube' } ] }, { "name": "৮. স্থিতিবিদ্যা", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/I73KETkAdcI", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/MvJNAFbeAqw", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/l2vDlNQTf5Y", type: 'youtube' } ] }, { "name": "৯. সমতলে বস্তুকণার গতি", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/Fy1ANcRTF4g", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/TsNfKvAsqKo", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/d5iL6yL-bRc", type: 'youtube' } ] } ] } } },
+            "biology": { "title": "জীববিজ্ঞান", "icon": "icon-biology", "primaryColor": "var(--biology-base)", "accentColor": "var(--biology-dark)", "papers": { "paper1": { "title": "উদ্ভিদবিজ্ঞান", "icon": "icon-book", "chapters": [ { "name": "১. কোষ ও কোষের গঠন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/LJUjARSoAic", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/Uvev60J5130", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/-0ZTl4R8-DU", type: 'youtube' } ] }, { "name": "২. কোষ বিভাজন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/t2DSLhw9jl4", type: 'youtube' } ] }, { "name": "৪. অণুজীব", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/dOabTOMnxrg", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/QrX0gE_Qt-4", type: 'youtube' } ] }, { "name": "৭. নগ্নবীজী ও আবৃতবীজী উদ্ভিদ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/akz5z7pXWeE", type: 'youtube' } ] }, { "name": "৮. টিস্যু ও টিস্যুতন্ত্র", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/hIe9YVNf2_I", type: 'youtube' } ] }, { "name": "৯. উদ্ভিদ শারীরতত্ত্ব", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/QdO-FrHwgHc", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/LZ2j-CsCFQs", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/o68kTx2r_-E", type: 'youtube' } ] }, { "name": "১১. জীবপ্রযুক্তি", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/aMAKhFRJm3s", type: 'youtube' } ] } ] }, "paper2": { "title": "প্রাণীবিজ্ঞান", "icon": "icon-book", "chapters": [ { "name": "১. প্রাণীর বিভিন্নতা ও শ্রেণিবিন্যাস", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/IbIjjxssKQ8", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/nl_7Yniq5wA", type: 'youtube' } ] }, { "name": "২. প্রাণীর পরিচিতি", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/Z0BPTmIYVA4", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/G74Uv7cgaEU", type: 'youtube' }, { "title": "লেকচার ০৩", "link": "https://youtu.be/N08mBG528cs", type: 'youtube' } ] }, { "name": "৩. পরিপাক ও শোষণ", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/oJ0lhQE_BYA", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/8981B_-QkCM", type: 'youtube' } ] }, { "name": "৪. রক্ত ও সংবহন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/bfoMXT8t9UE", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/nY9hS9DV4Nc", type: 'youtube' } ] }, { "name": "৫. শ্বসন ও শ্বাসক্রিয়া", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/VkK8mSXOLRQ", type: 'youtube' } ] }, { "name": "৭. চলন ও অঙ্গচালনা", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/S_rEHg2AMGU", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/VkK8mSXOLRQ", type: 'youtube' } ] }, { "name": "১১. জিনতত্ত্ব ও বিবর্তন", "lectures": [ { "title": "লেকচার ০১", "link": "https://youtu.be/i3Kfju6VbHE", type: 'youtube' }, { "title": "লেকচার ০২", "link": "https://youtu.be/DNrpoE6JscA", type: 'youtube' } ] } ] } } },
+            "bangla": { "title": "বাংলা", "icon": "icon-bangla", "primaryColor": "var(--bangla-base)", "accentColor": "var(--bangla-dark)", "papers": { "paper1": { "title": "বাংলা", "icon": "icon-book", "chapters": [] } } },
+            "english": { "title": "English", "icon": "icon-english", "primaryColor": "var(--english-base)", "accentColor": "var(--english-dark)", "papers": { "paper1": { "title": "English", "icon": "icon-book", "chapters": [] } } },
+            "ict": { "title": "ICT", "icon": "icon-ict", "primaryColor": "var(--ict-base)", "accentColor": "var(--ict-dark)", "papers": { "paper1": { "title": "ICT", "icon": "icon-book", "chapters": [] } } }
+         };
+
+        // --- Global State ---
+        let syllabusData = {};
+        let activeSubjectKey = null;
+        let player; // YouTube player instance
+        let statusTimeoutId = null; // For managing status message timeouts
+
+        // --- DOM Element References ---
+        const tabsContainer = document.getElementById('subject-tabs-container');
+        const contentArea = document.getElementById('subject-content-area-elite');
+        const statusArea = document.getElementById('status-area-premium');
+        const videoModal = document.getElementById('video-modal-premium');
+        const videoModalContent = document.getElementById('video-modal-content'); // Re-target specific ID
+        const videoModalTitle = document.getElementById('video-modal-title-premium');
+        const playerContainer = document.getElementById('youtube-player-container-premium');
+        const itemModal = document.getElementById('item-modal-premium');
+        const itemForm = document.getElementById('item-form-premium');
+        const itemModalTitle = document.getElementById('item-modal-title-premium');
+        const itemFormFields = document.getElementById('item-form-fields-premium');
+        const itemError = document.getElementById('item-error-premium');
+        const editItemTypeInput = document.getElementById('edit-item-type-premium');
+        const editSubjectKeyInput = document.getElementById('edit-subject-key-premium');
+        const editPaperKeyInput = document.getElementById('edit-paper-key-premium');
+        const editChapterIndexInput = document.getElementById('edit-chapter-index-premium');
+        const editLectureIndexInput = document.getElementById('edit-lecture-index-premium');
+        const contentLoadingPlaceholder = document.getElementById('content-loading');
+
+        // --- Utility Functions ---
+        // Extracts YouTube video ID from various URL formats. Returns null if invalid.
+        function getVideoIdFromUrl(url) { if (!url || typeof url !== 'string') return null; try { const u = new URL(url); const h = u.hostname.toLowerCase(); let v=null; if (h === 'youtu.be') v = u.pathname.slice(1); else if (h.endsWith('youtube.com')) { if (u.pathname === '/watch') v = u.searchParams.get('v'); else if (u.pathname.startsWith('/embed/')) v = u.pathname.split('/')[2]; else if (u.pathname.startsWith('/v/')) v = u.pathname.split('/')[2]; else if (u.pathname.startsWith('/shorts/')) v = u.pathname.split('/')[2]; } if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v; } catch(e){/* Ignore invalid URLs */} return null; }
+        // Basic URL validation (must start with http/https)
+        function isValidUrl(string) { if(!string || typeof string !== 'string') return false; if (!string.startsWith('http://')&&!string.startsWith('https://')) return false; try {new URL(string); return true;} catch(_){return false;} }
+        // Checks if a URL is a valid YouTube video link
+        function isYoutubeVideoUrl(url) { return isValidUrl(url) && !!getVideoIdFromUrl(url); }
+        // Displays a status message (toast notification)
+        function displayStatusMessage(message, type = 'info', duration = STATUS_MESSAGE_DURATION) {
+            const statusElement = document.createElement('div');
+            statusElement.className = `status-message-premium status-${type}`;
+            statusElement.textContent = message;
+            statusElement.setAttribute('role', 'alert'); // Accessibility
+
+            // Clear previous timeout if a new message arrives quickly
+            if (statusTimeoutId) {
+                clearTimeout(statusTimeoutId);
+            }
+
+            // Remove the element after animations complete
+            statusElement.addEventListener('animationend', (e) => {
+                // Only remove when the fade-out animation ends
+                if (e.animationName === 'premiumStatusFadeOut' && statusElement.parentNode) {
+                    statusElement.remove();
+                }
+            });
+
+            statusArea.prepend(statusElement); // Add to top for visibility
+
+            // Set a timeout to remove the element if animations don't fire (fallback)
+            statusTimeoutId = setTimeout(() => {
+                 if (statusElement.parentNode) {
+                    statusElement.remove();
+                 }
+                 statusTimeoutId = null; // Reset timeout ID
+            }, duration + 500); // Add buffer for fade-out animation time
+        }
+        // Escapes HTML special characters to prevent XSS
+        function escapeHtml(unsafe) { if (typeof unsafe !== 'string') return unsafe === null || unsafe === undefined ? '' : String(unsafe); return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
+        // Converts hex color (potentially with var()) to RGBA - Improved robustness
+        function hexToRgba(hex, alpha) {
+            const fallback = `rgba(100, 116, 139, ${alpha})`; // Fallback color (Slate)
+            if (!hex || typeof hex !== 'string') return fallback;
+
+            // Resolve CSS variable if needed
+            if (hex.startsWith('var(')) {
+                try {
+                    const varName = hex.match(/--[\w-]+/)?.[0];
+                    if (varName) {
+                        hex = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+                    } else {
+                        return fallback;
+                    }
+                } catch (e) { return fallback; }
+            }
+
+            hex = hex.replace('#', '').trim();
+            if (!/^[0-9a-fA-F]{3,6}$/.test(hex)) return fallback; // Validate hex format
+
+            if (hex.length === 3) {
+                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+            }
+            if (hex.length !== 6) return fallback;
+
+            const r = parseInt(hex.slice(0, 2), 16);
+            const g = parseInt(hex.slice(2, 4), 16);
+            const b = parseInt(hex.slice(4, 6), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
+
+        // --- LocalStorage Functions ---
+        function loadSyllabusData() {
+            try {
+                const storedData = localStorage.getItem(LOCAL_STORAGE_KEY_DATA);
+                if (storedData) {
+                    const parsedData = JSON.parse(storedData);
+                    // Basic validation: Check if essential subjects exist
+                    if (parsedData && typeof parsedData === 'object' && parsedData.physics && parsedData.chemistry) {
+                         // Deep merge with defaults to add new features/subjects if default changed
+                         syllabusData = mergeDeep(structuredClone(defaultSubjectData), parsedData);
+                         console.info("Dashboard data loaded successfully from localStorage.");
+                         saveSyllabusData(); // Save back potentially merged data
+                         return;
+                    } else {
+                        console.warn("Stored data is invalid or incomplete. Resetting to default.");
+                        resetToDefaultData(true); // Save the default data
+                    }
+                } else {
+                    console.info("No data found in localStorage. Initializing with default data.");
+                    resetToDefaultData(true); // Save the default data
+                }
+            } catch (error) {
+                console.error("Error loading data from localStorage:", error);
+                displayStatusMessage("ডেটা লোড করতে সমস্যা হয়েছে। ডিফল্ট ডেটা ব্যবহার করা হচ্ছে।", "error");
+                resetToDefaultData(true); // Save the default data on error
+            }
+        }
+        function resetToDefaultData(save = true) {
+             // Use structuredClone for deep copy if available, fallback to JSON parse/stringify
+            syllabusData = typeof structuredClone === 'function'
+                ? structuredClone(defaultSubjectData)
+                : JSON.parse(JSON.stringify(defaultSubjectData));
+            if (save) {
+                saveSyllabusData();
+            }
+            console.info("Dashboard data reset to default.");
+        }
+        function saveSyllabusData() {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY_DATA, JSON.stringify(syllabusData));
+                console.info("Dashboard data saved to localStorage.");
+            } catch (error) {
+                console.error("Error saving data to localStorage:", error);
+                displayStatusMessage("ত্রুটি: পরিবর্তন সংরক্ষণ করা যায়নি! (Local Storage সমস্যা)", "error");
+                // Consider more robust error handling / user feedback if storage is full
+            }
+        }
+        // Helper for deep merging data (keeps stored user data, adds new defaults)
+        function isObject(item) { return (item && typeof item === 'object' && !Array.isArray(item)); }
+        function mergeDeep(target, ...sources) {
+            sources.forEach(source => {
+                Object.keys(source).forEach(key => {
+                const targetValue = target[key];
+                const sourceValue = source[key];
+
+                if (isObject(targetValue) && isObject(sourceValue)) {
+                    mergeDeep(targetValue, sourceValue);
+                } else {
+                    // Overwrite target with source value only if target doesn't have it or source is defined
+                     if (targetValue === undefined || sourceValue !== undefined) {
+                       target[key] = sourceValue;
+                     }
+                }
+                });
+            });
+            return target;
+        }
+
+
+        // --- Rendering Functions (Optimized & Safer) ---
+        function renderTabs() {
+             let tabsHtml = '';
+             if (Object.keys(syllabusData).length === 0) {
+                 tabsHtml = `<span class="loading-placeholder-premium" style="padding: 10px 0; min-height: auto;">কোন বিষয় পাওয়া যায়নি।</span>`;
+             } else {
+                 Object.keys(syllabusData).forEach(key => {
+                     const subject = syllabusData[key];
+                     if (!subject || !subject.title) return; // Skip invalid subject entries
+                     const icon = subject.icon || 'icon-book'; // Fallback icon
+                     tabsHtml += `
+                        <button class="premium-tab" data-subject="${key}" style="--tab-color: ${subject.primaryColor || 'var(--text-secondary)'};">
+                            <svg aria-hidden="true" focusable="false"><use xlink:href="#${icon}"></use></svg>
+                            <span>${escapeHtml(subject.title)}</span>
+                        </button>`;
+                 });
+             }
+             tabsContainer.innerHTML = tabsHtml;
+         }
+
+        function renderSubjectContent(subjectKey) {
+            // Show loading indicator immediately
+            contentArea.innerHTML = ''; // Clear previous content
+            contentArea.appendChild(contentLoadingPlaceholder); // Show spinner
+            contentLoadingPlaceholder.classList.remove('hidden');
+
+            activeSubjectKey = subjectKey;
+            const subjectData = syllabusData[subjectKey];
+
+            if (!subjectData || typeof subjectData !== 'object') {
+                contentArea.innerHTML = `<p class="loading-placeholder-premium">"${escapeHtml(subjectKey)}" বিষয়টি খুঁজে পাওয়া যায়নি বা ডেটা সঠিক নয়।</p>`;
+                return;
+            }
+
+            // --- Update CSS Variables for Active Subject ---
+            const activePrimary = subjectData.primaryColor || 'var(--text-secondary)';
+            const activeDark = subjectData.accentColor || 'var(--text-primary)';
+            const activeLight = subjectData.primaryColor ? hexToRgba(activePrimary, 0.1) : 'var(--background-alt)'; // Generate light from primary if possible
+            const activeText = subjectData.primaryColor ? 'var(--active-text)' : 'var(--text-primary)'; // Use white text on colored background
+
+            document.documentElement.style.setProperty('--active-base', activePrimary);
+            document.documentElement.style.setProperty('--active-dark', activeDark);
+            document.documentElement.style.setProperty('--active-light', activeLight);
+            document.documentElement.style.setProperty('--active-text', activeText); // Set dynamic text color
+            document.documentElement.style.setProperty('--focus-ring-color', hexToRgba(activePrimary, 0.4)); // Use active color for focus ring
+
+            // Update active tab style
+            tabsContainer.querySelectorAll('.premium-tab').forEach(button => {
+                button.classList.toggle('active', button.dataset.subject === subjectKey);
+            });
+
+            // --- Build Content HTML ---
+            let contentHtml = '<div class="premium-content-wrapper"><div class="papers-grid-premium">';
+            const papers = subjectData.papers || {};
+            if (Object.keys(papers).length > 0) {
+                Object.keys(papers).forEach(paperKey => {
+                    const paperData = papers[paperKey];
+                    contentHtml += renderPaperSection(subjectKey, paperKey, paperData);
+                });
+            } else {
+                contentHtml += `<p>এই বিষয়ে কোনো পত্র যোগ করা হয়নি।</p>`; // Message if no papers
+            }
+            contentHtml += '</div></div>';
+
+            // Use requestAnimationFrame for smoother UI update after variable changes
+             requestAnimationFrame(() => {
+                 contentArea.innerHTML = contentHtml; // Replace content
+                 contentLoadingPlaceholder.classList.add('hidden'); // Hide spinner
+             });
+        }
+
+        function renderPaperSection(subjectKey, paperKey, paperData) {
+            if (!paperData || typeof paperData !== 'object') return ''; // Basic validation
+
+            const title = escapeHtml(paperData.title || 'শিরোনামহীন পত্র');
+            const icon = paperData.icon || 'icon-book';
+            const chapters = paperData.chapters || [];
+            let chapterHtml = '';
+
+            if (Array.isArray(chapters) && chapters.length > 0) {
+                chapterHtml = chapters.map((chapter, index) =>
+                    renderChapterItem(subjectKey, paperKey, index, chapter)
+                ).join('');
+            } else {
+                chapterHtml = '<li style="padding:15px 0; color:var(--text-muted); font-style: italic;">কোনো অধ্যায় যোগ করা হয়নি।</li>';
+            }
+
+            return `
+                <section class="paper-card-premium" aria-labelledby="paper-title-${subjectKey}-${paperKey}">
+                    <header class="paper-card-header">
+                        <h3 class="paper-title-premium" id="paper-title-${subjectKey}-${paperKey}">
+                            <svg aria-hidden="true" focusable="false"><use xlink:href="#${icon}"></use></svg>
+                            ${title}
+                        </h3>
+                         <button class="btn-premium btn-secondary-premium btn-sm" data-action="add-chapter" data-subject="${subjectKey}" data-paper="${paperKey}" title="নতুন অধ্যায় যোগ করুন">
+                             <svg aria-hidden="true" focusable="false"><use xlink:href="#icon-add"></use></svg>
+                             <span>অধ্যায়</span>
+                         </button>
+                    </header>
+                    <div class="paper-card-body">
+                        <ul class="chapter-list-premium">${chapterHtml}</ul>
+                    </div>
+                </section>`;
+        }
+
+        function renderChapterItem(subjectKey, paperKey, chapterIndex, chapterData) {
+             if (!chapterData || typeof chapterData.name !== 'string') return ''; // More robust check
+
+             const chapterName = escapeHtml(chapterData.name || 'নামবিহীন অধ্যায়');
+             const lectures = chapterData.lectures || [];
+             let lectureHtml = '';
+
+             if (Array.isArray(lectures) && lectures.length > 0) {
+                 lectureHtml = lectures.map((lecture, index) =>
+                     renderLectureItem(subjectKey, paperKey, chapterIndex, index, lecture)
+                 ).join('');
+             } else {
+                 lectureHtml = '<li style="color:var(--text-muted); padding: 10px 0; font-style: italic;">কোনো লেকচার বা রিসোর্স যোগ করা হয়নি।</li>';
+             }
+
+             // Unique ID for aria-controls
+             const detailsId = `chapter-details-${subjectKey}-${paperKey}-${chapterIndex}`;
+
+             return `
+                 <li class="chapter-item-premium" data-subject="${subjectKey}" data-paper="${paperKey}" data-chapter-index="${chapterIndex}">
+                     <details>
+                         <summary class="chapter-summary-premium" role="button" aria-expanded="false" aria-controls="${detailsId}">
+                             <span class="chapter-name-premium">${chapterName}</span>
+                             <div class="chapter-actions-premium">
+                                  <button class="btn-icon-premium warning" data-action="edit-chapter" title="অধ্যায় সম্পাদনা করুন">
+                                      <span class="visually-hidden">"${chapterName}" সম্পাদনা করুন</span>
+                                      <svg aria-hidden="true" focusable="false"><use xlink:href="#icon-edit"></use></svg>
+                                  </button>
+                                  <button class="btn-icon-premium danger" data-action="delete-chapter" title="অধ্যায় মুছে ফেলুন">
+                                      <span class="visually-hidden">"${chapterName}" মুছে ফেলুন</span>
+                                      <svg aria-hidden="true" focusable="false"><use xlink:href="#icon-delete"></use></svg>
+                                  </button>
+                             </div>
+                             <span class="accordion-toggle-icon" aria-hidden="true">
+                                <svg><use xlink:href="#icon-down-arrow"></use></svg>
+                             </span>
+                         </summary>
+                         <div class="chapter-details-premium" id="${detailsId}">
+                             <ul class="lecture-list-premium">${lectureHtml}</ul>
+                              <button class="btn-premium btn-secondary-premium btn-sm" data-action="add-lecture" data-subject="${subjectKey}" data-paper="${paperKey}" data-chapter-index="${chapterIndex}">
+                                  <svg aria-hidden="true" focusable="false"><use xlink:href="#icon-add"></use></svg>
+                                  <span>লেকচার/রিসোর্স</span>
+                              </button>
+                         </div>
+                     </details>
+                 </li>`;
+        }
+
+        function renderLectureItem(subjectKey, paperKey, chapterIndex, lectureIndex, lectureData) {
+             if (!lectureData || typeof lectureData.link !== 'string' || typeof lectureData.title !== 'string') return ''; // More robust check
+
+             const itemType = lectureData.type || (isYoutubeVideoUrl(lectureData.link) ? 'youtube' : 'link');
+             const videoId = itemType === 'youtube' ? getVideoIdFromUrl(lectureData.link) : null;
+             const lectureTitle = escapeHtml(lectureData.title || 'নামবিহীন আইটেম');
+             const lectureLink = escapeHtml(lectureData.link);
+
+             let icon = 'icon-link';
+             let action = 'open-link';
+             let buttonText = 'লিঙ্ক খুলুন';
+             let buttonTitle = `"${lectureTitle}" লিঙ্কটি নতুন ট্যাবে খুলুন`;
+             let watchButtonClass = 'btn-secondary-premium';
+             let actionIcon = 'icon-link';
+
+             if (itemType === 'youtube' && videoId) {
+                 icon = 'icon-video';
+                 action = 'watch-lecture';
+                 buttonText = 'ভিডিও দেখুন';
+                 buttonTitle = `"${lectureTitle}" ভিডিওটি দেখুন`;
+                 watchButtonClass = 'btn-primary-premium';
+                 actionIcon = 'icon-play';
+             } else if (itemType === 'pdf') {
+                 icon = 'icon-pdf';
+                 action = 'open-link'; // Keep as open link for PDFs
+                 buttonText = 'PDF দেখুন';
+                 buttonTitle = `"${lectureTitle}" PDF টি নতুন ট্যাবে খুলুন`;
+                 watchButtonClass = 'btn-secondary-premium';
+                 actionIcon = 'icon-pdf';
+             }
+
+             // For modal title: combine chapter and lecture title
+             const chapterName = syllabusData[subjectKey]?.papers?.[paperKey]?.chapters?.[chapterIndex]?.name || '';
+             const fullTitle = escapeHtml(chapterName ? `${chapterName} - ${lectureData.title}` : lectureData.title);
+
+             return `
+                 <li class="lecture-item-premium" data-lecture-index="${lectureIndex}" data-item-type="${itemType}">
+                     <div class="lecture-info-premium">
+                         <svg aria-hidden="true" focusable="false"><use xlink:href="#${icon}"></use></svg>
+                         <span class="lecture-title-premium" title="${lectureTitle}">${lectureTitle}</span>
+                     </div>
+                     <div class="lecture-actions-premium">
+                         <button class="btn-premium ${watchButtonClass} btn-sm" data-action="${action}" data-link="${lectureLink}" data-video-id="${videoId || ''}" data-title="${fullTitle}" data-subject="${subjectKey}" title="${buttonTitle}">
+                             <svg aria-hidden="true" focusable="false"><use xlink:href="#${actionIcon}"></use></svg>
+                             <span>${buttonText}</span>
+                         </button>
+                         <button class="btn-icon-premium warning" data-action="edit-lecture" title="আইটেম সম্পাদনা করুন">
+                            <span class="visually-hidden">"${lectureTitle}" সম্পাদনা করুন</span>
+                            <svg aria-hidden="true" focusable="false"><use xlink:href="#icon-edit"></use></svg>
+                         </button>
+                         <button class="btn-icon-premium danger" data-action="delete-lecture" title="আইটেম মুছে ফেলুন">
+                            <span class="visually-hidden">"${lectureTitle}" মুছে ফেলুন</span>
+                            <svg aria-hidden="true" focusable="false"><use xlink:href="#icon-delete"></use></svg>
+                         </button>
+                     </div>
+                 </li>`;
+        }
+
+
+        // --- Modal Management ---
+        function openModal(modalId) {
+             const modalElement = document.getElementById(modalId);
+             if (!modalElement) { console.error(`Modal with ID "${modalId}" not found.`); return; }
+
+             const modalContentEl = modalElement.querySelector(".premium-modal-content");
+             if (modalContentEl) {
+                 // Apply active subject's color dynamically
+                 const activePrimary = document.documentElement.style.getPropertyValue('--active-base').trim() || 'var(--text-secondary)';
+                 modalContentEl.style.borderTopColor = activePrimary;
+                 // Pass variables for form focus rings if needed inside modal scope
+                 modalContentEl.style.setProperty('--active-base', activePrimary);
+                 modalContentEl.style.setProperty('--focus-ring-color', hexToRgba(activePrimary, 0.4));
+             }
+
+             modalElement.style.display = 'flex'; // Use flex for centering
+             // Delay adding animation class slightly to ensure display:flex is applied first
+             requestAnimationFrame(() => {
+                modalElement.classList.remove('hidden'); // Controls animation visibility if needed elsewhere
+             });
+
+             document.body.style.overflow = 'hidden'; // Prevent background scroll
+
+             // Focus trapping (basic example - could be more robust)
+             const focusableElements = modalElement.querySelectorAll(
+                 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+             );
+             const firstElement = focusableElements[0];
+             const lastElement = focusableElements[focusableElements.length - 1];
+
+             if (firstElement) firstElement.focus(); // Focus first element on open
+
+             modalElement.addEventListener('keydown', (e) => {
+                 if (e.key === 'Tab') {
+                     if (e.shiftKey) { // Shift + Tab
+                         if (document.activeElement === firstElement) {
+                             lastElement.focus();
+                             e.preventDefault();
+                         }
+                     } else { // Tab
+                         if (document.activeElement === lastElement) {
+                             firstElement.focus();
+                             e.preventDefault();
+                         }
+                     }
+                 }
+             });
+         }
+        function closeModal(modalId) {
+             const modalElement = document.getElementById(modalId);
+             if (!modalElement || modalElement.classList.contains('hidden')) return; // Already hidden or not found
+
+             // Add a class to trigger fade-out animation (if desired)
+             // modalElement.classList.add('modal-fade-out');
+
+             // Hide after a short delay (or animation duration)
+             // setTimeout(() => {
+                 modalElement.classList.add('hidden');
+                 modalElement.style.display = 'none'; // Ensure it's hidden
+             // }, 300); // Match animation duration
+
+             if (modalId === 'video-modal-premium') {
+                 closeVideoPlayer();
+             }
+             resetItemForm(); // Reset forms on any modal close
+
+             // Restore body scroll only if no other modals are open
+             if (document.querySelectorAll('.premium-modal:not(.hidden)').length === 0) {
+                 document.body.style.overflow = 'auto';
+             }
+         }
+        function closeVideoPlayer() {
+            if (player) {
+                // Check methods exist before calling
+                if (typeof player.stopVideo === 'function') {
+                    try { player.stopVideo(); } catch (e) { console.warn("Could not stop video:", e); }
+                }
+                if (typeof player.destroy === 'function') {
+                    try { player.destroy(); } catch (e) { console.warn("Could not destroy player:", e); }
+                } else {
+                    // Fallback: Remove the iframe manually if destroy fails or doesn't exist
+                    const iframe = playerContainer.querySelector('iframe');
+                    if (iframe) iframe.remove();
+                }
+                player = null; // Clear the reference
+            }
+            // Reset player container message
+            showPlayerMessage("প্লেয়ার বন্ধ করা হয়েছে।");
+            delete videoModal.dataset.pendingVideoId; // Clear pending ID
+        }
+
+        // --- Generic Item Form Handling (Improved Validation) ---
+        function resetItemForm() {
+             itemForm.reset();
+             itemFormFields.innerHTML = ''; // Clear dynamic fields
+             itemError.textContent = ''; // Clear previous errors
+             itemError.classList.remove('form-error-premium--visible'); // Hide error area visually if needed
+             editItemTypeInput.value = '';
+             editSubjectKeyInput.value = '';
+             editPaperKeyInput.value = '';
+             editChapterIndexInput.value = '';
+             editLectureIndexInput.value = '';
+             // Remove error classes from all inputs/selects within the form
+             itemForm.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+         }
+        function openItemModal(config) {
+            resetItemForm(); // Ensure form is clean before population
+            const { type, subjectKey, paperKey, chapterIndex, lectureIndex = -1 } = config;
+
+            // Validate context
+             if (!type || !subjectKey || !paperKey || typeof chapterIndex !== 'number') {
+                console.error("Invalid configuration for openItemModal:", config);
+                displayStatusMessage("ফর্ম খুলতে সমস্যা হয়েছে (কনফিগারেশন ত্রুটি)।", "error");
+                return;
+             }
+
+            // Store context in hidden fields
+            editItemTypeInput.value = type;
+            editSubjectKeyInput.value = subjectKey;
+            editPaperKeyInput.value = paperKey;
+            editChapterIndexInput.value = chapterIndex; // Keep as is (can be >= 0 for chapter edits)
+            editLectureIndexInput.value = lectureIndex; // -1 for add, >= 0 for edit lecture
+
+            let fieldsHtml = '';
+            let modalTitle = '';
+            let currentData = null;
+            const isEditing = lectureIndex > -1; // Use lectureIndex to determine edit mode
+
+            if (type === 'chapter') {
+                const editingChapterIndex = isEditing ? lectureIndex : chapterIndex; // Use lectureIndex if editing chapter itself
+                 modalTitle = isEditing ? "অধ্যায় সম্পাদনা করুন" : "নতুন অধ্যায় যোগ করুন";
+                 if (isEditing) {
+                     currentData = syllabusData[subjectKey]?.papers?.[paperKey]?.chapters?.[editingChapterIndex];
+                 }
+                 fieldsHtml = `
+                    <div class="form-field-premium">
+                        <label for="item-name">অধ্যায়ের নাম <span aria-hidden="true">*</span></label>
+                        <input type="text" id="item-name" name="name" value="${escapeHtml(currentData?.name || '')}" required minlength="2" placeholder="যেমন: ভেক্টর">
+                        <div class="form-error-premium" id="item-name-error"></div>
+                    </div>`;
+            } else if (type === 'lecture') {
+                modalTitle = isEditing ? "লেকচার/রিসোর্স সম্পাদনা করুন" : "নতুন লেকচার/রিসোর্স যোগ করুন";
+                if (isEditing) {
+                    currentData = syllabusData[subjectKey]?.papers?.[paperKey]?.chapters?.[chapterIndex]?.lectures?.[lectureIndex];
+                }
+                const currentType = currentData?.type || 'youtube'; // Default to youtube for new items
+                fieldsHtml = `
+                    <div class="form-field-premium">
+                        <label for="item-title">টাইটেল <span aria-hidden="true">*</span></label>
+                        <input type="text" id="item-title" name="title" value="${escapeHtml(currentData?.title || '')}" required minlength="3" placeholder="যেমন: লেকচার ০১ - ভেক্টর পরিচিতি">
+                         <div class="form-error-premium" id="item-title-error"></div>
+                    </div>
+                    <div class="form-field-premium">
+                        <label for="item-link">লিংক (URL) <span aria-hidden="true">*</span></label>
+                        <input type="url" id="item-link" name="link" value="${escapeHtml(currentData?.link || '')}" required placeholder="https://www.youtube.com/watch?v=...">
+                         <div class="form-error-premium" id="item-link-error"></div>
+                    </div>
+                    <div class="form-field-premium">
+                        <label for="item-type-select">ধরণ</label>
+                        <select id="item-type-select" name="type">
+                            <option value="youtube" ${currentType === 'youtube' ? 'selected' : ''}>ইউটিউব ভিডিও</option>
+                            <option value="pdf" ${currentType === 'pdf' ? 'selected' : ''}>PDF লিংক</option>
+                            <option value="link" ${currentType === 'link' ? 'selected' : ''}>অন্যান্য লিংক</option>
+                        </select>
+                    </div>`;
+            } else {
+                 console.error("Unsupported item type for modal:", type);
+                 displayStatusMessage(`অসমর্থিত আইটেম টাইপ: ${type}`, "error");
+                 return;
+            }
+
+            itemModalTitle.textContent = modalTitle;
+            itemFormFields.innerHTML = fieldsHtml;
+            openModal('item-modal-premium'); // Open the modal
+        }
+        function handleItemSave(event) {
+             event.preventDefault(); // Prevent default form submission
+             itemError.textContent = ''; // Clear global form error
+             let isValid = true;
+
+             // Clear previous field errors
+             itemForm.querySelectorAll('.form-error-premium[id]').forEach(el => el.textContent = '');
+             itemForm.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+             // Get context
+             const type = editItemTypeInput.value;
+             const subjectKey = editSubjectKeyInput.value;
+             const paperKey = editPaperKeyInput.value;
+             const chapterIndex = parseInt(editChapterIndexInput.value, 10);
+             const lectureIndex = parseInt(editLectureIndexInput.value, 10); // -1 for add, >= 0 for edit
+
+             // Context Validation
+             if (!type || !subjectKey || !paperKey || isNaN(chapterIndex)) {
+                 itemError.textContent = "ফর্ম জমা দিতে সমস্যা হয়েছে (কনটেক্সট ত্রুটি)। পৃষ্ঠা রিলোড করে চেষ্টা করুন।";
+                 isValid = false;
+                 return; // Stop processing if context is missing
+             }
+
+             let dataToSave = {};
+             let successMessage = '';
+
+             // --- Field Specific Validation ---
+             if (type === 'chapter') {
+                 const nameInput = document.getElementById('item-name');
+                 const nameError = document.getElementById('item-name-error');
+                 dataToSave.name = nameInput?.value.trim();
+
+                 if (!dataToSave.name) {
+                     nameInput?.classList.add('input-error');
+                     nameError.textContent = "অধ্যায়ের নাম আবশ্যক।";
+                     isValid = false;
+                 } else if (dataToSave.name.length < 2) {
+                     nameInput?.classList.add('input-error');
+                     nameError.textContent = "নাম অন্তত ২ অক্ষর দীর্ঘ হতে হবে।";
+                     isValid = false;
+                 }
+             } else if (type === 'lecture') {
+                 const titleInput = document.getElementById('item-title');
+                 const titleError = document.getElementById('item-title-error');
+                 const linkInput = document.getElementById('item-link');
+                 const linkError = document.getElementById('item-link-error');
+                 const typeSelect = document.getElementById('item-type-select');
+
+                 dataToSave.title = titleInput?.value.trim();
+                 dataToSave.link = linkInput?.value.trim();
+                 dataToSave.type = typeSelect?.value || 'link'; // Default to 'link' if select fails
+
+                 // Title validation
+                 if (!dataToSave.title) {
+                     titleInput?.classList.add('input-error');
+                     titleError.textContent = "আইটেমের টাইটেল আবশ্যক।";
+                     isValid = false;
+                 } else if (dataToSave.title.length < 3) {
+                     titleInput?.classList.add('input-error');
+                     titleError.textContent = "টাইটেল অন্তত ৩ অক্ষর দীর্ঘ হতে হবে।";
+                     isValid = false;
+                 }
+
+                 // Link validation
+                 if (!dataToSave.link) {
+                     linkInput?.classList.add('input-error');
+                     linkError.textContent = "আইটেমের লিংক আবশ্যক।";
+                     isValid = false;
+                 } else if (!isValidUrl(dataToSave.link)) {
+                     linkInput?.classList.add('input-error');
+                     linkError.textContent = "দয়া করে একটি সঠিক URL দিন (http:// বা https:// দিয়ে শুরু)।";
+                     isValid = false;
+                 } else if (dataToSave.type === 'youtube' && !isYoutubeVideoUrl(dataToSave.link)) {
+                     linkInput?.classList.add('input-error');
+                     linkError.textContent = "এটি একটি সঠিক ইউটিউব ভিডিও লিংক নয়।";
+                     isValid = false;
+                 }
+             }
+
+             // --- If Validation Passes, Proceed to Save ---
+             if (isValid) {
+                 try {
+                     const paper = syllabusData[subjectKey]?.papers?.[paperKey];
+                     if (!paper || !Array.isArray(paper.chapters)) {
+                         throw new Error("পত্র বা অধ্যায়ের তালিকা খুঁজে পাওয়া যায়নি।");
+                     }
+
+                     if (type === 'chapter') {
+                         const targetChapterIndex = lectureIndex > -1 ? lectureIndex : -1; // Use lectureIndex if editing chapter
+                         if (targetChapterIndex === -1) { // Adding new chapter
+                             paper.chapters.push({ name: dataToSave.name, lectures: [] });
+                             successMessage = `অধ্যায় "${dataToSave.name}" সফলভাবে যোগ করা হয়েছে।`;
+                         } else { // Editing existing chapter
+                             if (!paper.chapters[targetChapterIndex]) throw new Error("সম্পাদনার জন্য অধ্যায়টি পাওয়া যায়নি।");
+                             paper.chapters[targetChapterIndex].name = dataToSave.name;
+                             successMessage = `অধ্যায় "${dataToSave.name}" সফলভাবে আপডেট করা হয়েছে।`;
+                         }
+                     } else if (type === 'lecture') {
+                         const chapter = paper.chapters[chapterIndex];
+                         if (!chapter) throw new Error("লেকচার যোগ/সম্পাদনার জন্য অধ্যায়টি পাওয়া যায়নি।");
+                         if (!Array.isArray(chapter.lectures)) chapter.lectures = []; // Ensure lectures array exists
+
+                         if (lectureIndex === -1) { // Adding new lecture
+                             chapter.lectures.push(dataToSave);
+                             successMessage = `আইটেম "${dataToSave.title}" সফলভাবে যোগ করা হয়েছে।`;
+                         } else { // Editing existing lecture
+                             if (!chapter.lectures[lectureIndex]) throw new Error("সম্পাদনার জন্য লেকচারটি পাওয়া যায়নি।");
+                             // Merge existing data with new data (preserves other potential fields)
+                             chapter.lectures[lectureIndex] = { ...chapter.lectures[lectureIndex], ...dataToSave };
+                             successMessage = `আইটেম "${dataToSave.title}" সফলভাবে আপডেট করা হয়েছে।`;
+                         }
+                     }
+
+                     saveSyllabusData(); // Save the updated data
+                     renderSubjectContent(subjectKey); // Re-render the current subject view
+                     closeModal('item-modal-premium'); // Close the modal
+                     displayStatusMessage(successMessage, "success"); // Show success message
+
+                 } catch (error) {
+                     console.error("Error saving item:", error);
+                     itemError.textContent = `সেভ করতে সমস্যা হয়েছে: ${error.message}`;
+                     displayStatusMessage("আইটেম সেভ করতে একটি সমস্যা হয়েছে।", "error");
+                 }
+             } else {
+                 // If not valid, display a generic error in the modal footer
+                 itemError.textContent = "ফর্মের কিছু তথ্য সঠিক নয়। দয়া করে আবার দেখুন।";
+                 // Focus the first invalid field
+                 const firstErrorInput = itemForm.querySelector('.input-error');
+                 if (firstErrorInput) firstErrorInput.focus();
+             }
+         }
+
+
+        // --- CRUD Deletion (with Confirmation) ---
+        function deleteChapter(subjectKey, paperKey, chapterIndex) {
+             const chapter = syllabusData[subjectKey]?.papers?.[paperKey]?.chapters?.[chapterIndex];
+             if (!chapter) { displayStatusMessage("ত্রুটি: অধ্যায় মোছার জন্য পাওয়া যায়নি।", "error"); return; }
+
+             const chapterName = chapter.name || 'এই অধ্যায়';
+             const lectureCount = chapter.lectures?.length || 0;
+             const confirmationMessage = `আপনি কি নিশ্চিতভাবে "${escapeHtml(chapterName)}" অধ্যায়টি মুছে ফেলতে চান?` +
+                                         (lectureCount > 0 ? ` এর অধীনে থাকা ${lectureCount} টি লেকচার/রিসোর্সও মুছে যাবে।` : '');
+
+             if (window.confirm(confirmationMessage)) {
+                 try {
+                     const paper = syllabusData[subjectKey]?.papers?.[paperKey];
+                     if (!paper || !paper.chapters || !paper.chapters[chapterIndex]) {
+                         throw new Error("অধ্যায় মোছার সময় ডেটা খুঁজে পাওয়া যায়নি।");
+                     }
+                     paper.chapters.splice(chapterIndex, 1); // Remove the chapter
+                     saveSyllabusData();
+                     renderSubjectContent(subjectKey); // Re-render
+                     displayStatusMessage(`অধ্যায় "${escapeHtml(chapterName)}" সফলভাবে মুছে ফেলা হয়েছে।`, "success");
+                 } catch (error) {
+                     console.error("Error deleting chapter:", error);
+                     displayStatusMessage(`অধ্যায় মোছতে সমস্যা হয়েছে: ${error.message}`, "error");
+                 }
+             }
+        }
+        function deleteLecture(subjectKey, paperKey, chapterIndex, lectureIndex) {
+             const lecture = syllabusData[subjectKey]?.papers?.[paperKey]?.chapters?.[chapterIndex]?.lectures?.[lectureIndex];
+             if (!lecture) { displayStatusMessage("ত্রুটি: আইটেমটি মোছার জন্য পাওয়া যায়নি।", "error"); return; }
+
+             const lectureTitle = lecture.title || 'এই আইটেম';
+             if (window.confirm(`আপনি কি নিশ্চিতভাবে "${escapeHtml(lectureTitle)}" আইটেমটি মুছে ফেলতে চান?`)) {
+                 try {
+                     const chapter = syllabusData[subjectKey]?.papers?.[paperKey]?.chapters?.[chapterIndex];
+                     if (!chapter || !chapter.lectures || !chapter.lectures[lectureIndex]) {
+                         throw new Error("আইটেম মোছার সময় ডেটা খুঁজে পাওয়া যায়নি।");
+                     }
+                     chapter.lectures.splice(lectureIndex, 1); // Remove the lecture
+                     saveSyllabusData();
+                     renderSubjectContent(subjectKey); // Re-render
+                     displayStatusMessage(`আইটেম "${escapeHtml(lectureTitle)}" সফলভাবে মুছে ফেলা হয়েছে।`, "success");
+                 } catch (error) {
+                     console.error("Error deleting lecture:", error);
+                     displayStatusMessage(`আইটেম মোছতে সমস্যা হয়েছে: ${error.message}`, "error");
+                 }
+             }
+        }
+
+
+        // --- Event Handlers ---
+        function handleTabClick(event) {
+             const targetButton = event.target.closest('.premium-tab');
+             if (!targetButton || targetButton.classList.contains('active')) return; // Ignore clicks outside buttons or on active tab
+             const subjectKey = targetButton.dataset.subject;
+             if (subjectKey) {
+                 renderSubjectContent(subjectKey);
+             }
+        }
+
+        function handleContentClick(event) {
+            const targetButton = event.target.closest('button[data-action]');
+            if (!targetButton) return; // Only handle clicks on buttons with data-action
+
+            // No need to preventDefault unless it's inside a form or link that shouldn't navigate
+            // event.preventDefault(); // Usually not needed unless inside <a> or <form>
+
+            const action = targetButton.dataset.action;
+
+            // Find the closest relevant context elements
+            const lectureItem = targetButton.closest('.lecture-item-premium');
+            const chapterItem = targetButton.closest('.chapter-item-premium');
+            const paperCard = targetButton.closest('.paper-card-premium'); // Find paper context if action is directly on paper (e.g., add chapter)
+
+            // Extract context data - Use optional chaining and fallbacks
+            const subjectKey = targetButton.dataset.subject
+                                || chapterItem?.dataset.subject
+                                || lectureItem?.closest('.chapter-item-premium')?.dataset.subject // Find subject from lecture's chapter
+                                || paperCard?.querySelector('[data-subject]')?.dataset.subject // Find subject from paper's add button
+                                || activeSubjectKey; // Fallback to globally active subject
+
+            const paperKey = targetButton.dataset.paper
+                             || chapterItem?.dataset.paper
+                             || lectureItem?.closest('.chapter-item-premium')?.dataset.paper
+                             || paperCard?.querySelector('[data-paper]')?.dataset.paper;
+
+
+            // Chapter index requires the chapter item
+            const chapterIndexStr = targetButton.dataset.chapterIndex // From Add Lecture button
+                                    || chapterItem?.dataset.chapterIndex;
+            const chapterIndex = chapterIndexStr !== undefined ? parseInt(chapterIndexStr, 10) : -1;
+
+             // Lecture index requires the lecture item
+            const lectureIndexStr = lectureItem?.dataset.lectureIndex;
+            const lectureIndex = lectureIndexStr !== undefined ? parseInt(lectureIndexStr, 10) : -1;
+
+            // console.debug(`Action: ${action}, Ctx: Subj=${subjectKey}, Paper=${paperKey}, Chap=${chapterIndex}, Lect=${lectureIndex}`);
+
+             // --- Validate Context before proceeding ---
+             if (!action || !subjectKey || !paperKey ) {
+                 console.error("Action or context missing:", { action, subjectKey, paperKey, chapterIndex, lectureIndex });
+                 displayStatusMessage("কার্যক্রমটি সম্পাদন করা যায়নি (প্রয়োজনীয় তথ্য অনুপস্থিত)।", "error");
+                 return;
+             }
+              // Chapter/Lecture actions need valid chapterIndex
+             if ((action.includes('lecture') || action.includes('edit-chapter') || action.includes('delete-chapter')) && (isNaN(chapterIndex) || chapterIndex < 0)) {
+                  console.error("Chapter context missing for action:", { action, subjectKey, paperKey, chapterIndex });
+                  displayStatusMessage("অধ্যায়ের তথ্য পাওয়া যায়নি।", "error");
+                  return;
+             }
+             // Lecture edit/delete needs valid lectureIndex
+              if ((action === 'edit-lecture' || action === 'delete-lecture') && (isNaN(lectureIndex) || lectureIndex < 0)) {
+                  console.error("Lecture context missing for action:", { action, subjectKey, paperKey, chapterIndex, lectureIndex });
+                   displayStatusMessage("লেকচারের তথ্য পাওয়া যায়নি।", "error");
+                   return;
+              }
+
+            // --- Perform Action ---
+            switch (action) {
+                case 'add-chapter':
+                    openItemModal({ type: 'chapter', subjectKey, paperKey, chapterIndex: -1, lectureIndex: -1 }); // lectureIndex -1 signifies add mode for chapter
+                    break;
+                case 'edit-chapter':
+                    // Use chapterIndex directly as the item index for editing a chapter
+                    openItemModal({ type: 'chapter', subjectKey, paperKey, chapterIndex: chapterIndex, lectureIndex: chapterIndex });
+                    break;
+                case 'delete-chapter':
+                    deleteChapter(subjectKey, paperKey, chapterIndex);
+                    break;
+                case 'add-lecture':
+                    openItemModal({ type: 'lecture', subjectKey, paperKey, chapterIndex, lectureIndex: -1 }); // lectureIndex -1 signifies add mode
+                    break;
+                case 'edit-lecture':
+                     openItemModal({ type: 'lecture', subjectKey, paperKey, chapterIndex, lectureIndex });
+                    break;
+                case 'delete-lecture':
+                    deleteLecture(subjectKey, paperKey, chapterIndex, lectureIndex);
+                    break;
+                case 'watch-lecture':
+                    const videoId = targetButton.dataset.videoId;
+                    const title = targetButton.dataset.title;
+                    if (videoId) {
+                        openVideoModal(videoId, title, subjectKey);
+                    } else {
+                        displayStatusMessage("সঠিক ভিডিও আইডি পাওয়া যায়নি।", "warning");
+                    }
+                    break;
+                case 'open-link':
+                    const link = targetButton.dataset.link;
+                    if (link && isValidUrl(link)) {
+                        window.open(link, '_blank', 'noopener noreferrer');
+                    } else {
+                        displayStatusMessage("সঠিক লিংক পাওয়া যায়নি।", "warning");
+                    }
+                    break;
+                default:
+                    console.warn("Unhandled action:", action);
+            }
+         }
+
+        // Handle accordion toggle for ARIA
+        function handleAccordionToggle(event) {
+            if (event.target.tagName === 'SUMMARY') {
+                const summary = event.target;
+                const details = summary.closest('details');
+                if (details) {
+                    // Timeout ensures the 'open' attribute has been updated
+                    setTimeout(() => {
+                        summary.setAttribute('aria-expanded', details.open);
+                    }, 0);
+                }
+            }
+        }
+
+
+        // --- YouTube Player Integration (Robust Error Handling) ---
+        function onYouTubeIframeAPIReady() {
+             console.info("YouTube IFrame API is ready.");
+             // Check if a video was intended to load before the API was ready
+             if (videoModal.dataset.pendingVideoId && !player) {
+                 console.log("Loading pending video:", videoModal.dataset.pendingVideoId);
+                 loadVideoInModal(videoModal.dataset.pendingVideoId);
+                 delete videoModal.dataset.pendingVideoId;
+             }
+         }
+        function openVideoModal(videoId, title, subjectKey) {
+             if (!videoId || !/^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
+                 displayStatusMessage("ভিডিও লিঙ্ক বা আইডি সঠিক নয়।", "error");
+                 return;
+             }
+             videoModalTitle.textContent = escapeHtml(title) || 'লেকচার ভিডিও';
+
+             // Ensure the subject color is applied to the modal border
+             const activePrimary = syllabusData[subjectKey]?.primaryColor || 'var(--text-secondary)';
+             videoModalContent.style.borderTopColor = activePrimary;
+
+             openModal('video-modal-premium');
+
+             // Check if YT API is loaded
+             if (typeof YT !== 'undefined' && YT.Player) {
+                 loadVideoInModal(videoId);
+             } else {
+                 // API not ready yet, show message and set pending ID
+                 showPlayerMessage("ইউটিউব প্লেয়ার লোড হচ্ছে...");
+                 videoModal.dataset.pendingVideoId = videoId; // Store ID to load when ready
+                 console.warn("YT API not ready, video load deferred.");
+             }
+         }
+        function loadVideoInModal(videoId) {
+             if (!videoId) {
+                 showPlayerMessage("ত্রুটি: ভিডিও আইডি পাওয়া যায়নি।", true);
+                 return;
+             }
+
+             // Ensure previous player is destroyed cleanly
+             if (player && typeof player.destroy === 'function') {
+                 try {
+                     player.destroy();
+                     player = null;
+                      console.log("Previous YouTube player destroyed.");
+                 } catch (e) {
+                     console.warn("Error destroying previous player instance:", e);
+                     player = null; // Still nullify the reference
+                 }
+             } else {
+                player = null; // Ensure it's null if destroy didn't exist or wasn't called
+             }
+
+             showPlayerMessage("প্লেয়ার লোড হচ্ছে..."); // Show loading message
+
+             // Unique ID for the player div to avoid conflicts if modal reopens quickly
+             const playerDivId = `ytplayer-${Date.now()}`;
+             playerContainer.innerHTML = `<div id="${playerDivId}" style="width: 100%; height: 100%;"></div>`; // Ensure div takes space
+
+             try {
+                 player = new YT.Player(playerDivId, {
+                     // Use width/height 100% to fill the container controlled by CSS aspect-ratio
+                     height: '100%',
+                     width: '100%',
+                     videoId: videoId,
+                     playerVars: {
+                         'playsinline': 1,       // Good for mobile
+                         'autoplay': 1,          // Autoplay when ready
+                         'modestbranding': 1,    // Less YouTube logo
+                         'rel': 0,               // Don't show related videos at end
+                         'origin': window.location.origin, // Security best practice
+                         'controls': 1,          // Show controls
+                         'iv_load_policy': 3     // Don't show annotations
+                     },
+                     events: {
+                         'onReady': onPlayerReady,
+                         'onError': onPlayerError,
+                         'onStateChange': onPlayerStateChange // Optional: track state
+                     }
+                 });
+                 console.log("New YouTube player instance created for:", videoId);
+             } catch (error) {
+                 console.error('Error creating YT.Player instance:', error);
+                 showPlayerMessage(`প্লেয়ার তৈরি করতে ত্রুটি হয়েছে: ${error.message}`, true);
+             }
+         }
+        function onPlayerReady(event) {
+            console.info("YouTube Player Ready. Playing video.");
+            // event.target.playVideo(); // Autoplay is set, so this might be redundant
+             // Clear any loading messages once the player is truly ready
+             const loadingMessage = playerContainer.querySelector('.player-message-premium');
+             if (loadingMessage) loadingMessage.remove();
+         }
+        function onPlayerError(event) {
+             console.error('YouTube Player Error:', event.data);
+             let errorMessage = `দুঃখিত, ভিডিওটি প্লে করা যাচ্ছে না। `;
+             switch (event.data) {
+                 case 2:  errorMessage += '(ভুল ভিডিও আইডি)'; break;
+                 case 5:  errorMessage += '(HTML5 প্লেয়ার ত্রুটি)'; break;
+                 case 100: errorMessage += '(ভিডিও খুঁজে পাওয়া যায়নি)'; break;
+                 case 101: errorMessage += '(এমবেডিং অনুমোদিত নয়)'; break;
+                 case 150: errorMessage += '(এমবেডিং অনুমোদিত নয়)'; break;
+                 default: errorMessage += `(অজানা ত্রুটি কোড: ${event.data})`;
+             }
+             showPlayerMessage(errorMessage, true); // Show error in player area
+             displayStatusMessage("ভিডিও প্লে করতে সমস্যা হয়েছে।", "error"); // Also show toast
+         }
+         function onPlayerStateChange(event) {
+            // Example: Log state changes
+            // console.log("Player State Changed:", event.data);
+            // -1 (unstarted), 0 (ended), 1 (playing), 2 (paused), 3 (buffering), 5 (video cued)
+         }
+        function showPlayerMessage(message, isError = false) {
+             // Clear previous content safely before adding message
+             while (playerContainer.firstChild) {
+                 playerContainer.removeChild(playerContainer.firstChild);
+             }
+             const messageDiv = document.createElement('div');
+             messageDiv.className = `player-message-premium ${isError ? 'error' : ''}`;
+             messageDiv.textContent = escapeHtml(message);
+             playerContainer.appendChild(messageDiv);
+         }
+
+
+        // --- Initialization ---
+        function initializeDashboard() {
+            console.log("Initializing Premium+ Dashboard...");
+            contentLoadingPlaceholder.classList.remove('hidden'); // Show initial load spinner
+
+            loadSyllabusData(); // Load or set default data
+            renderTabs();       // Render subject tabs
+
+            // Determine the first subject key safely
+            const subjectKeys = Object.keys(syllabusData);
+            const firstSubjectKey = subjectKeys.length > 0 ? subjectKeys[0] : null;
+
+            if (firstSubjectKey) {
+                renderSubjectContent(firstSubjectKey); // Render content for the first subject
+            } else {
+                contentArea.innerHTML = "<p class='loading-placeholder-premium'>কোনো বিষয় যোগ করা হয়নি।</p>"; // Show message if no subjects
+                 contentLoadingPlaceholder.classList.add('hidden'); // Hide spinner if no subjects
+            }
+
+            // --- Attach Global Event Listeners ---
+            tabsContainer.addEventListener('click', handleTabClick);
+            contentArea.addEventListener('click', handleContentClick);
+            contentArea.addEventListener('toggle', handleAccordionToggle, true); // Capture toggle events for ARIA
+
+            itemForm.addEventListener('submit', handleItemSave);
+
+            // Close modals on close button click
+            document.querySelectorAll('[data-modal-close]').forEach(button => {
+                button.addEventListener('click', () => closeModal(button.dataset.modalClose));
+            });
+
+            // Close modals on Escape key press
+             document.addEventListener('keydown', (event) => {
+                 if (event.key === 'Escape') {
+                     const openModal = document.querySelector('.premium-modal:not(.hidden)');
+                     if (openModal) {
+                         closeModal(openModal.id);
+                     }
+                 }
+             });
+
+             // Close modals on backdrop click (optional)
+             document.querySelectorAll('.premium-modal').forEach(modal => {
+                 modal.addEventListener('click', (event) => {
+                     // Close only if the click is directly on the modal backdrop itself
+                     if (event.target === modal) {
+                         closeModal(modal.id);
+                     }
+                 });
+             });
+
+
+            console.log("Premium+ Dashboard Initialized.");
+        }
+
+        // --- Initial Page Load ---
+        // Use DOMContentLoaded for non-deferred scripts, or window.onload if scripts are deferred
+        if (document.readyState === 'loading') {
+             document.addEventListener('DOMContentLoaded', initializeDashboard);
+        } else {
+             // DOMContentLoaded has already fired
+             initializeDashboard();
+        }
+
+    </script>
+
+</body>
+</html>
